@@ -123,215 +123,6 @@
   /* Lock scroll while splash is visible */
   body.splash-active { overflow: hidden; }
 
-  /* ── STICKY CTA BAR ── */
-  #sticky-cta {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 180;
-    background: var(--ink);
-    color: #fff;
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    box-shadow: 0 -4px 32px rgba(0,0,0,0.18);
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
-    flex-wrap: wrap;
-  }
-  #sticky-cta.visible { transform: translateY(0); }
-  .scta-text {
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.95rem; font-weight: 700;
-    letter-spacing: -0.01em;
-    white-space: nowrap;
-  }
-  .scta-text span { color: #6EA8FF; }
-  .scta-actions { display: flex; align-items: center; gap: 10px; }
-  .scta-btn {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: var(--electric); color: #fff;
-    padding: 10px 22px; border-radius: 100px;
-    font-size: 0.85rem; font-weight: 700;
-    text-decoration: none; letter-spacing: -0.01em;
-    transition: background 0.2s, transform 0.15s;
-    white-space: nowrap;
-    box-shadow: 0 4px 16px rgba(0,82,245,0.4);
-  }
-  .scta-btn:hover { background: var(--electric-dim); transform: translateY(-1px); }
-  .scta-btn.ghost-btn {
-    background: rgba(255,255,255,0.1);
-    box-shadow: none;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  .scta-btn.ghost-btn:hover { background: rgba(255,255,255,0.18); }
-  .scta-dismiss {
-    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-    background: none; border: none; cursor: pointer;
-    color: rgba(255,255,255,0.4); font-size: 1.1rem; line-height: 1;
-    padding: 4px 8px;
-    transition: color 0.2s;
-  }
-  .scta-dismiss:hover { color: #fff; }
-  @media (max-width: 600px) {
-    #sticky-cta { padding: 12px 40px 12px 16px; gap: 10px; }
-    .scta-text { font-size: 0.82rem; }
-    .scta-btn { padding: 9px 16px; font-size: 0.8rem; }
-    .scta-btn.ghost-btn { display: none; }
-  }
-
-  /* ── WHATSAPP CHAT WIDGET ── */
-  #wa-widget {
-    position: fixed;
-    bottom: 24px; right: 24px;
-    z-index: 170;
-    display: flex; flex-direction: column; align-items: flex-end;
-    gap: 12px;
-    transition: bottom 0.4s cubic-bezier(0.22,1,0.36,1);
-  }
-  #wa-widget.scta-offset { bottom: 82px; }
-
-  .wa-bubble {
-    width: 58px; height: 58px; border-radius: 50%;
-    background: #25D366;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 6px 28px rgba(37,211,102,0.45);
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    border: none;
-    flex-shrink: 0;
-  }
-  .wa-bubble:hover { transform: scale(1.08); box-shadow: 0 10px 36px rgba(37,211,102,0.55); }
-  .wa-bubble svg { width: 30px; height: 30px; }
-  .wa-pulse {
-    position: absolute; inset: -4px;
-    border-radius: 50%;
-    border: 2px solid rgba(37,211,102,0.45);
-    animation: waPulse 2s ease-out infinite;
-  }
-  @keyframes waPulse {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(1.6); opacity: 0; }
-  }
-  .wa-notification {
-    position: absolute; top: -2px; right: -2px;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: #EF4444; border: 2px solid var(--paper);
-    font-size: 0.6rem; font-weight: 700; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .wa-popup {
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 12px 48px rgba(0,0,0,0.14);
-    width: 300px;
-    overflow: hidden;
-    opacity: 0; pointer-events: none;
-    transform: translateY(12px) scale(0.97);
-    transform-origin: bottom right;
-    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22,1,0.36,1);
-  }
-  .wa-popup.open { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
-
-  .wa-popup-header {
-    background: #075E54;
-    padding: 16px 18px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .wa-avatar {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    font-size: 1.4rem;
-  }
-  .wa-header-info { flex: 1; }
-  .wa-header-name {
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.95rem; font-weight: 700; color: #fff;
-  }
-  .wa-header-status {
-    font-size: 0.75rem; color: rgba(255,255,255,0.7);
-    display: flex; align-items: center; gap: 5px; margin-top: 2px;
-  }
-  .wa-status-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #25D366;
-    animation: pulse 2s infinite;
-  }
-  .wa-popup-close {
-    background: none; border: none; cursor: pointer;
-    color: rgba(255,255,255,0.6); font-size: 1.1rem;
-    line-height: 1; padding: 2px;
-    transition: color 0.2s;
-  }
-  .wa-popup-close:hover { color: #fff; }
-
-  .wa-popup-body {
-    padding: 16px 18px;
-    background: #ECE5DD;
-    min-height: 80px;
-    display: flex;
-  }
-  .wa-message-bubble {
-    background: #fff;
-    border-radius: 12px 12px 12px 0;
-    padding: 10px 14px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    max-width: 220px;
-  }
-  .wa-message-text {
-    font-size: 0.85rem; color: #111; line-height: 1.5;
-  }
-  .wa-message-time {
-    font-size: 0.68rem; color: #999;
-    text-align: right; margin-top: 4px;
-  }
-
-  .wa-popup-footer {
-    padding: 14px 18px;
-    background: #fff;
-  }
-  .wa-start-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    background: #25D366; color: #fff;
-    padding: 13px 20px; border-radius: 100px;
-    font-size: 0.9rem; font-weight: 700;
-    text-decoration: none; width: 100%;
-    transition: background 0.2s, transform 0.15s;
-    box-shadow: 0 4px 16px rgba(37,211,102,0.35);
-  }
-  .wa-start-btn:hover { background: #1ebe5d; transform: translateY(-1px); }
-  .wa-tooltip {
-    position: absolute;
-    right: 68px; bottom: 14px;
-    background: var(--ink); color: #fff;
-    font-size: 0.78rem; font-weight: 600;
-    padding: 6px 12px; border-radius: 8px;
-    white-space: nowrap;
-    opacity: 0; pointer-events: none;
-    transform: translateX(4px);
-    transition: opacity 0.2s, transform 0.2s;
-  }
-  .wa-tooltip::after {
-    content: '';
-    position: absolute; right: -5px; top: 50%;
-    transform: translateY(-50%);
-    border: 5px solid transparent;
-    border-right: 0;
-    border-left-color: var(--ink);
-  }
-  #wa-widget:hover .wa-tooltip { opacity: 1; transform: translateX(0); }
-  .wa-popup.open ~ .wa-tooltip { opacity: 0 !important; }
-  @media (max-width: 480px) {
-    .wa-popup { width: 270px; }
-    #wa-widget { bottom: 20px; right: 16px; }
-    #wa-widget.scta-offset { bottom: 86px; }
-  }
-
   /* Skip link for keyboard/screen reader users */
   .skip-link {
     position: absolute; top: -100px; left: 16px; z-index: 9999;
@@ -564,29 +355,10 @@
   }
   .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
 
-  /* ── ANIMATED COUNTERS ── */
-  .counter {
-    transition: color 0.3s ease;
-  }
-  .counter.counting {
-    color: var(--electric);
-  }
-  @keyframes counterPop {
-    0%   { transform: scale(1); }
-    50%  { transform: scale(1.12); }
-    100% { transform: scale(1); }
-  }
-  .counter.done {
-    animation: counterPop 0.35s cubic-bezier(0.22,1,0.36,1);
-    color: var(--ink);
-  }
-
   /* Hero visual panel */
   .hero-visual {
     animation: fadeIn 0.8s 0.2s ease both;
     position: relative;
-    overflow: visible;
-    padding: 28px 0 0 28px; /* room for the floating badge */
   }
   .hero-card {
     background: var(--ink);
@@ -657,15 +429,13 @@
 
   /* Floating badge */
   .floating-badge {
-    position: absolute; top: 0; left: 0;
+    position: absolute; top: -18px; left: -20px;
     background: var(--gold); color: var(--ink);
     padding: 13px 18px; border-radius: 16px;
     font-family: 'Nunito', sans-serif;
     font-weight: 700; font-size: 0.8rem; line-height: 1.35;
     box-shadow: 0 8px 28px rgba(200,154,58,0.4);
     animation: float 3s ease-in-out infinite;
-    z-index: 10;
-    pointer-events: none;
   }
 
   /* ── SECTIONS ── */
@@ -1080,8 +850,7 @@
     .hero-visual { display: block; }
     .hero-card { min-height: 220px; padding: 24px; }
     .card-headline { font-size: 1.3rem; }
-    .floating-badge { font-size: 0.75rem; padding: 10px 14px; top: 0; left: 0; z-index: 10; }
-    .hero-visual { padding: 24px 0 0 24px; }
+    .floating-badge { font-size: 0.75rem; padding: 10px 14px; top: 0; left: 0; }
     .hero h1 { font-size: clamp(2.2rem, 8vw, 3.2rem); }
     .hero-sub { max-width: 100%; font-size: 0.97rem; }
     .hero-actions { gap: 12px; }
@@ -1227,26 +996,27 @@
     </div>
     <div class="hero-stats">
       <div class="stat-item">
-        <div class="stat-num counter" data-target="120" data-suffix="+">0+</div>
+        <div class="stat-num">120+</div>
         <div class="stat-label">Sites Launched</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num counter" data-target="98" data-suffix="%">0%</div>
+        <div class="stat-num">98%</div>
         <div class="stat-label">Client Retention</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num counter" data-target="5" data-suffix="★" data-decimals="1">0★</div>
+        <div class="stat-num">5★</div>
         <div class="stat-label">Google Rating</div>
       </div>
     </div>
   </div>
 
   <div class="hero-visual">
-    <div class="floating-badge">
-      ✦ Starting from<br>
-      <span style="font-size: 1.1rem;">$195 / KSh 25K</span>
-    </div>
-    <div class="hero-card">
+    <div style="position: relative; padding: 24px 0 0 24px;">
+      <div class="floating-badge">
+        ✦ Starting from<br>
+        <span style="font-size: 1.1rem;">$195 / KSh 25K</span>
+      </div>
+      <div class="hero-card">
         <div>
           <div class="card-tag">
             <span class="card-live"></span>
@@ -1272,6 +1042,7 @@
             </svg>
           </div>
         </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1605,55 +1376,6 @@
 </footer>
 </main>
 
-<!-- ── STICKY CTA BAR ── -->
-<div id="sticky-cta" role="banner" aria-label="Contact prompt">
-  <p class="scta-text">Ready to grow online? <span>Let's build your dream site.</span></p>
-  <div class="scta-actions">
-    <a href="https://wa.me/254700000000?text=Hi%20Quantara%2C%20I%27d%20like%20to%20discuss%20a%20project" class="scta-btn" target="_blank" rel="noopener">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Chat on WhatsApp
-    </a>
-    <a href="#contact" class="scta-btn ghost-btn">Get a Quote</a>
-  </div>
-  <button class="scta-dismiss" aria-label="Dismiss banner" title="Dismiss">✕</button>
-</div>
-
-<!-- ── WHATSAPP CHAT WIDGET ── -->
-<div id="wa-widget">
-  <div class="wa-popup" id="waPopup" role="dialog" aria-label="WhatsApp chat" aria-modal="true">
-    <div class="wa-popup-header">
-      <div class="wa-avatar">🌐</div>
-      <div class="wa-header-info">
-        <div class="wa-header-name">Quantara Web Hub</div>
-        <div class="wa-header-status">
-          <span class="wa-status-dot"></span> Typically replies instantly
-        </div>
-      </div>
-      <button class="wa-popup-close" id="waClose" aria-label="Close chat">✕</button>
-    </div>
-    <div class="wa-popup-body">
-      <div class="wa-message-bubble">
-        <p class="wa-message-text">👋 Hi there! Ready to take your business online? Send us a message and we'll get back to you right away.</p>
-        <p class="wa-message-time">now</p>
-      </div>
-    </div>
-    <div class="wa-popup-footer">
-      <a href="https://wa.me/254700000000?text=Hi%20Quantara%2C%20I%27d%20like%20to%20discuss%20a%20project" target="_blank" rel="noopener" class="wa-start-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Start Chat
-      </a>
-    </div>
-  </div>
-  <div class="wa-tooltip">Chat with us!</div>
-  <button class="wa-bubble" id="waBubble" aria-label="Open WhatsApp chat" aria-expanded="false">
-    <span class="wa-pulse"></span>
-    <span class="wa-notification">1</span>
-    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
-  </button>
-</div>
-
 <script>
   // ── Splash screen dismiss ──
   (function() {
@@ -1755,168 +1477,4 @@
     el.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
     observer.observe(el);
   });
-
-  // ── STICKY CTA BAR ──
-  (function() {
-    const bar = document.getElementById('sticky-cta');
-    const dismiss = bar.querySelector('.scta-dismiss');
-    const waWidget = document.getElementById('wa-widget');
-    let dismissed = false;
-
-    // Show after user scrolls past the hero (~100vh)
-    const heroHeight = window.innerHeight;
-
-    function updateBar() {
-      if (dismissed) return;
-      if (window.scrollY > heroHeight * 0.8) {
-        bar.classList.add('visible');
-        waWidget.classList.add('scta-offset');
-      } else {
-        bar.classList.remove('visible');
-        waWidget.classList.remove('scta-offset');
-      }
-    }
-
-    window.addEventListener('scroll', updateBar, { passive: true });
-
-    dismiss.addEventListener('click', () => {
-      dismissed = true;
-      bar.classList.remove('visible');
-      waWidget.classList.remove('scta-offset');
-      // Restore after 30s in case user wants it again
-      setTimeout(() => { dismissed = false; }, 30000);
-    });
-  })();
-
-  // ── WHATSAPP CHAT WIDGET ──
-  (function() {
-    const bubble = document.getElementById('waBubble');
-    const popup  = document.getElementById('waPopup');
-    const close  = document.getElementById('waClose');
-
-    // Show notification badge briefly, then hide after open
-    function openPopup() {
-      popup.classList.add('open');
-      bubble.setAttribute('aria-expanded', 'true');
-      // Hide notification dot once seen
-      const dot = bubble.querySelector('.wa-notification');
-      if (dot) { dot.style.display = 'none'; }
-    }
-
-    function closePopup() {
-      popup.classList.remove('open');
-      bubble.setAttribute('aria-expanded', 'false');
-    }
-
-    bubble.addEventListener('click', () => {
-      popup.classList.contains('open') ? closePopup() : openPopup();
-    });
-
-    close.addEventListener('click', closePopup);
-
-    // Close when clicking outside widget
-    document.addEventListener('click', (e) => {
-      if (!document.getElementById('wa-widget').contains(e.target)) {
-        closePopup();
-      }
-    });
-
-    // Auto-open popup after 8s (first visit feel), then stop
-    const autoOpen = setTimeout(() => {
-      if (!popup.classList.contains('open')) openPopup();
-    }, 8000);
-
-    // Cancel auto-open if user interacts first
-    bubble.addEventListener('click', () => clearTimeout(autoOpen), { once: true });
-  })();
-
-  // ── ANIMATED COUNTERS ──
-  (function() {
-    const counters = document.querySelectorAll('.counter');
-    if (!counters.length) return;
-
-    function easeOutCubic(t) {
-      return 1 - Math.pow(1 - t, 3);
-    }
-
-    function animateCounter(el) {
-      if (el.dataset.animated) return; // guard: never fire twice
-      el.dataset.animated = '1';
-      counterObserver.unobserve(el);
-
-      const target   = parseFloat(el.dataset.target);
-      const suffix   = el.dataset.suffix || '';
-      const decimals = parseInt(el.dataset.decimals || '0', 10);
-      const duration = 1800;
-      const start    = performance.now();
-
-      el.classList.add('counting');
-
-      function tick(now) {
-        const elapsed  = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased    = easeOutCubic(progress);
-        el.textContent = (eased * target).toFixed(decimals) + suffix;
-        if (progress < 1) {
-          requestAnimationFrame(tick);
-        } else {
-          el.textContent = target.toFixed(decimals) + suffix;
-          el.classList.remove('counting');
-          el.classList.add('done');
-          el.addEventListener('animationend', () => el.classList.remove('done'), { once: true });
-        }
-      }
-      requestAnimationFrame(tick);
-    }
-
-    function isInViewport(el) {
-      const r = el.getBoundingClientRect();
-      return r.top < window.innerHeight && r.bottom > 0;
-    }
-
-    // Check all un-animated counters that are currently visible
-    function checkVisible() {
-      counters.forEach(el => {
-        if (!el.dataset.animated && isInViewport(el)) animateCounter(el);
-      });
-    }
-
-    // IntersectionObserver catches counters that start below the fold
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) animateCounter(entry.target);
-      });
-    }, { threshold: 0.1 });
-
-    counters.forEach(el => counterObserver.observe(el));
-
-    // ── THE KEY FIX FOR MOBILE ──
-    // On mobile the hero stats sit inside the viewport on load, but the
-    // splash screen (z-index 9999) covers everything until ~2700ms.
-    // The IntersectionObserver fires immediately (element IS in viewport)
-    // but by then animateCounter may have already run during the splash,
-    // meaning users never see the animation after the splash fades out.
-    //
-    // Solution: re-check visibility RIGHT AFTER the splash is dismissed,
-    // and also listen for scroll so below-fold counters still work.
-
-    function startCountersAfterSplash() {
-      checkVisible(); // catch any already-visible counters
-      window.addEventListener('scroll', checkVisible, { passive: true });
-    }
-
-    const splash = document.getElementById('splash');
-    if (!splash) {
-      // Splash already gone (cached page, fast connection)
-      setTimeout(startCountersAfterSplash, 50);
-    } else {
-      // Wait for the splash fade-out transition to end, then run
-      splash.addEventListener('transitionend', () => {
-        setTimeout(startCountersAfterSplash, 50);
-      }, { once: true });
-
-      // Hard fallback at 3.1s (just after the 2700ms dismiss + 400ms transition)
-      setTimeout(startCountersAfterSplash, 3100);
-    }
-  })();
 </script>
