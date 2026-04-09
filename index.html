@@ -585,6 +585,8 @@
   .hero-visual {
     animation: fadeIn 0.8s 0.2s ease both;
     position: relative;
+    overflow: visible;
+    padding: 28px 0 0 28px; /* room for the floating badge */
   }
   .hero-card {
     background: var(--ink);
@@ -655,13 +657,15 @@
 
   /* Floating badge */
   .floating-badge {
-    position: absolute; top: -18px; left: -20px;
+    position: absolute; top: 0; left: 0;
     background: var(--gold); color: var(--ink);
     padding: 13px 18px; border-radius: 16px;
     font-family: 'Nunito', sans-serif;
     font-weight: 700; font-size: 0.8rem; line-height: 1.35;
     box-shadow: 0 8px 28px rgba(200,154,58,0.4);
     animation: float 3s ease-in-out infinite;
+    z-index: 10;
+    pointer-events: none;
   }
 
   /* ── SECTIONS ── */
@@ -1076,7 +1080,8 @@
     .hero-visual { display: block; }
     .hero-card { min-height: 220px; padding: 24px; }
     .card-headline { font-size: 1.3rem; }
-    .floating-badge { font-size: 0.75rem; padding: 10px 14px; top: 0; left: 0; }
+    .floating-badge { font-size: 0.75rem; padding: 10px 14px; top: 0; left: 0; z-index: 10; }
+    .hero-visual { padding: 24px 0 0 24px; }
     .hero h1 { font-size: clamp(2.2rem, 8vw, 3.2rem); }
     .hero-sub { max-width: 100%; font-size: 0.97rem; }
     .hero-actions { gap: 12px; }
@@ -1237,12 +1242,11 @@
   </div>
 
   <div class="hero-visual">
-    <div style="position: relative; padding: 24px 0 0 24px;">
-      <div class="floating-badge">
-        ✦ Starting from<br>
-        <span style="font-size: 1.1rem;">$195 / KSh 25K</span>
-      </div>
-      <div class="hero-card">
+    <div class="floating-badge">
+      ✦ Starting from<br>
+      <span style="font-size: 1.1rem;">$195 / KSh 25K</span>
+    </div>
+    <div class="hero-card">
         <div>
           <div class="card-tag">
             <span class="card-live"></span>
@@ -1268,7 +1272,6 @@
             </svg>
           </div>
         </div>
-      </div>
     </div>
   </div>
 </section>
@@ -1837,6 +1840,10 @@
     }
 
     function animateCounter(el) {
+      if (el.dataset.animated) return; // guard: never fire twice
+      el.dataset.animated = '1';
+      counterObserver.unobserve(el);
+
       const target   = parseFloat(el.dataset.target);
       const suffix   = el.dataset.suffix || '';
       const decimals = parseInt(el.dataset.decimals || '0', 10);
@@ -1849,10 +1856,7 @@
         const elapsed  = now - start;
         const progress = Math.min(elapsed / duration, 1);
         const eased    = easeOutCubic(progress);
-        const current  = eased * target;
-
-        el.textContent = current.toFixed(decimals) + suffix;
-
+        el.textContent = (eased * target).toFixed(decimals) + suffix;
         if (progress < 1) {
           requestAnimationFrame(tick);
         } else {
@@ -1862,19 +1866,57 @@
           el.addEventListener('animationend', () => el.classList.remove('done'), { once: true });
         }
       }
-
       requestAnimationFrame(tick);
     }
 
+    function isInViewport(el) {
+      const r = el.getBoundingClientRect();
+      return r.top < window.innerHeight && r.bottom > 0;
+    }
+
+    // Check all un-animated counters that are currently visible
+    function checkVisible() {
+      counters.forEach(el => {
+        if (!el.dataset.animated && isInViewport(el)) animateCounter(el);
+      });
+    }
+
+    // IntersectionObserver catches counters that start below the fold
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animateCounter(entry.target);
-          counterObserver.unobserve(entry.target);
-        }
+        if (entry.isIntersecting) animateCounter(entry.target);
       });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.1 });
 
     counters.forEach(el => counterObserver.observe(el));
+
+    // ── THE KEY FIX FOR MOBILE ──
+    // On mobile the hero stats sit inside the viewport on load, but the
+    // splash screen (z-index 9999) covers everything until ~2700ms.
+    // The IntersectionObserver fires immediately (element IS in viewport)
+    // but by then animateCounter may have already run during the splash,
+    // meaning users never see the animation after the splash fades out.
+    //
+    // Solution: re-check visibility RIGHT AFTER the splash is dismissed,
+    // and also listen for scroll so below-fold counters still work.
+
+    function startCountersAfterSplash() {
+      checkVisible(); // catch any already-visible counters
+      window.addEventListener('scroll', checkVisible, { passive: true });
+    }
+
+    const splash = document.getElementById('splash');
+    if (!splash) {
+      // Splash already gone (cached page, fast connection)
+      setTimeout(startCountersAfterSplash, 50);
+    } else {
+      // Wait for the splash fade-out transition to end, then run
+      splash.addEventListener('transitionend', () => {
+        setTimeout(startCountersAfterSplash, 50);
+      }, { once: true });
+
+      // Hard fallback at 3.1s (just after the 2700ms dismiss + 400ms transition)
+      setTimeout(startCountersAfterSplash, 3100);
+    }
   })();
 </script>
