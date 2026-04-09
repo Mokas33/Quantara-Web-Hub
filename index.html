@@ -33,6 +33,96 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
 
+  /* ── SPLASH SCREEN ── */
+  #splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 32px;
+    pointer-events: all;
+    transition: opacity 0.55s ease, visibility 0.55s ease;
+  }
+  #splash.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .splash-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: splashLogoIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
+  }
+  .splash-logo-icon {
+    width: 52px; height: 52px;
+    background: var(--electric);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 0 rgba(0,82,245,0.5);
+    animation: splashPulse 2s ease 0.9s infinite;
+  }
+  .splash-logo-icon svg { width: 28px; height: 28px; }
+  .splash-wordmark { display: flex; flex-direction: column; line-height: 1; }
+  .splash-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.6rem; font-weight: 800;
+    color: #fff; letter-spacing: -0.02em;
+  }
+  .splash-sub {
+    font-size: 0.65rem; font-weight: 500;
+    color: rgba(255,255,255,0.4); letter-spacing: 0.14em;
+    text-transform: uppercase; margin-top: 3px;
+  }
+
+  .splash-bar-wrap {
+    width: 180px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    animation: splashFadeIn 0.4s ease 0.7s forwards;
+  }
+  .splash-bar {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--electric), #6EA8FF);
+    border-radius: 2px;
+    animation: splashProgress 1.6s cubic-bezier(0.4,0,0.2,1) 0.85s forwards;
+  }
+  .splash-tagline {
+    font-size: 0.72rem; font-weight: 500;
+    color: rgba(255,255,255,0.3); letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: splashFadeIn 0.4s ease 0.9s forwards;
+  }
+
+  @keyframes splashLogoIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes splashFadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes splashProgress {
+    0%   { width: 0%; }
+    60%  { width: 75%; }
+    100% { width: 100%; }
+  }
+  @keyframes splashPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,82,245,0.45); }
+    50%       { box-shadow: 0 0 0 10px rgba(0,82,245,0); }
+  }
+
+  /* Lock scroll while splash is visible */
+  body.splash-active { overflow: hidden; }
+
   /* Skip link for keyboard/screen reader users */
   .skip-link {
     position: absolute; top: -100px; left: 16px; z-index: 9999;
@@ -825,7 +915,27 @@
   }
 </style>
 </head>
-<body>
+<body class="splash-active">
+
+<!-- ── SPLASH SCREEN ── -->
+<div id="splash" role="status" aria-label="Loading Quantara Web Hub">
+  <div class="splash-logo">
+    <div class="splash-logo-icon">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 14C4 8.477 8.477 4 14 4s10 4.477 10 10-4.477 10-10 10" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M14 9v5l3.5 3.5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="splash-wordmark">
+      <span class="splash-name">Quantara</span>
+      <span class="splash-sub">Web Hub</span>
+    </div>
+  </div>
+  <div class="splash-bar-wrap">
+    <div class="splash-bar"></div>
+  </div>
+  <span class="splash-tagline">Your Global Digital Growth Partner</span>
+</div>
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -1267,6 +1377,41 @@
 </main>
 
 <script>
+  // ── Splash screen dismiss ──
+  (function() {
+    const splash = document.getElementById('splash');
+    // Total animation duration: logo (0.2s delay + 0.7s) + progress (0.85s delay + 1.6s) ≈ 2.6s
+    // Dismiss at 2.7s to let the bar fully fill before fading out
+    function dismissSplash() {
+      splash.classList.add('hidden');
+      document.body.classList.remove('splash-active');
+      splash.addEventListener('transitionend', () => {
+        splash.remove();
+      }, { once: true });
+    }
+
+    // Dismiss after animations complete (or sooner if page already loaded)
+    const TARGET_MS = 2700;
+    const start = performance.now();
+
+    function tryDismiss() {
+      const elapsed = performance.now() - start;
+      if (elapsed >= TARGET_MS) {
+        dismissSplash();
+      } else {
+        setTimeout(dismissSplash, TARGET_MS - elapsed);
+      }
+    }
+
+    if (document.readyState === 'complete') {
+      tryDismiss();
+    } else {
+      window.addEventListener('load', tryDismiss);
+      // Failsafe: never show longer than 5s
+      setTimeout(dismissSplash, 5000);
+    }
+  })();
+
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
 
